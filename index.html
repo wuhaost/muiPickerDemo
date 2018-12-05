@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>MUI日历选择</title>
+    <link rel="stylesheet" type="text/css" href="css/aui.css" />
+    <link rel="stylesheet" href="css/mui/dist/css/mui.min.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/static.css">
+    <script type="text/javascript" src="script/api.js"></script>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin();">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title" id="titleShow">MUI日历选择</div>
+        <a class="aui-btn aui-pull-right" tapmode onclick="fnUpQueryDate();">
+            <span id="upSpan" class="elHide">上一级</span>
+        </a>
+    </header>
+
+    <section class="tab-box" id="section">
+        <div style="float:left;">
+            <button type="button" class="mui-btn mui-btn-gray mui-btn-blue" id="buttonMonth" onclick="fnDateTab(this,'month');" tapmode>月</button>
+            <button type="button" class="mui-btn mui-btn-gray" id="buttonQuarter" onclick="fnDateTab(this,'quarter');" tapmode>季</button>
+            <button type="button" class="mui-btn mui-btn-gray" id="buttonYear" onclick="fnDateTab(this,'year');" tapmode>年</button>
+        </div>
+        <div id="iconMonth" onclick="fnOpenDtPickerFrame('month');">
+            <div class="date-icon" style="float:right;" id="dataTextMonth" tapmode>2008-01</div>
+            <div class="calendarIcon"></div>
+        </div>
+        <div id="iconQuarter" class="elHide" onclick="fnOpenDtPickerFrame('quarter');">
+            <div class="date-icon" style="float:right;" id="dataTextQuarter" tapmode>Q1</div>
+            <div class="calendarIcon"></div>
+        </div>
+        <div id="iconYear" class="elHide" onclick="fnOpenDtPickerFrame('year');">
+            <div class="date-icon" style="float:right;" id="dataTextYear" tapmode>2008</div>
+            <div class="calendarIcon"></div>
+        </div>
+    </section>
+
+    <footer class="aui-bar aui-bar-tab aui-border-t" id="footer">
+        <div class="aui-bar-tab-item aui-active" id="statsChat" tapmode onclick="fnFooterChange('0');">
+            <i class="aui-iconfont aui-icon-image"></i>
+            <div class="aui-bar-tab-label">统计图</div>
+        </div>
+        <div class="aui-bar-tab-item" id="statsList" tapmode onclick="fnFooterChange('1');">
+            <i class="aui-iconfont aui-icon-menu"></i>
+            <div class="aui-bar-tab-label">统计列表</div>
+        </div>
+    </footer>
+</body>
+<script type="text/javascript">
+    apiready = function() {};
+    // 打开日期选择Frame
+    function fnOpenDtPickerFrame(dateType) {
+        api.openFrame({
+            name: 'dtpicker_frame',
+            url: 'html/dtpicker_frame.html',
+            pageParam: {
+                winName: 'index',
+                dateType: dateType
+            },
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            bgColor: 'rgba(0,0,0,0.5)' // 设置Frame的透明度
+        });
+    }
+    // 标签切换查询
+    function fnDateTab(obj, date) {
+        // 标签切换
+        api.parseTapmode();
+        // 获取所有同级元素
+        var labelArr = obj.parentNode.children;
+        for (var i = 0;i<labelArr.length;i++) {
+            $api.removeCls(labelArr[i], 'mui-btn-blue');
+        }
+        $api.addCls(obj, 'mui-btn-blue');
+        if ('year' == date) {
+            $api.removeCls($api.byId('iconYear'), 'elHide');
+            $api.addCls($api.byId('iconQuarter'), 'elHide');
+            $api.addCls($api.byId('iconMonth'), 'elHide');
+        } else if ('quarter' == date) {
+            $api.removeCls($api.byId('iconQuarter'), 'elHide');
+            $api.addCls($api.byId('iconYear'), 'elHide');
+            $api.addCls($api.byId('iconMonth'), 'elHide');
+        } else if ('month' == date) {
+            $api.removeCls($api.byId('iconMonth'), 'elHide');
+            $api.addCls($api.byId('iconYear'), 'elHide');
+            $api.addCls($api.byId('iconQuarter'), 'elHide');
+        }
+    }
+    //统计图和统计列表切换
+    function fnFooterChange(num) {
+        if ('0' == num) {
+            $api.addCls($api.byId('statsChat'), 'aui-active');
+            $api.removeCls($api.byId('statsList'), 'aui-active');
+        } else {
+            $api.addCls($api.byId('statsList'), 'aui-active');
+            $api.removeCls($api.byId('statsChat'), 'aui-active');
+        }
+    }
+</script>
+</html>
